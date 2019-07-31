@@ -1,0 +1,57 @@
+properties([
+  parameters([
+    string(name: 'rhost_ip', defaultValue: '10.5.1.104', description: 'target node ip address'),
+    string(name: 'ssh_creds', defaultValue: 'ubuntu_ssh', description: 'ssh credentials id for target node'),
+//    string(name: 'git_branch', defaultValue: 'master', description: 'git branch/tag name'),
+    string(name: 'ci_branch', defaultValue: 'master', description: 'ci git branch/tag name')
+   ])
+])
+string d_path = "cfy1"
+//${params.d_path_p}"
+string s_path = "repo/containerization/cfy"
+def remote = [:]
+remote.name = "cfy_node"
+//${params.rhost_name}"
+remote.host = "${params.rhost_ip}"
+remote.allowAnyHosts = true
+node {
+  withCredentials([sshUserPrivateKey(credentialsId: "${params.ssh_creds}", keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),
+      usernamePassword(credentialsId: '5gt-ci', usernameVariable: 'u5g', passwordVariable: 'p5g')]) {
+        remote.user = userName
+        remote.identityFile = identity
+  stage('Bootstrap') {
+    sh 'rm -rf /tmp/scripts-my'
+    sh "if sudo docker version; then echo 'Docker installed'; else rm -rf /tmp/scripts-my; git clone https://github.com/denjuve/scripts.git /tmp/scripts-my; bash /tmp/scripts-my/docker_install.sh; fi"
+    sh "if sudo docker-compose --version; then echo 'Compose installed'; else sudo curl -L https://github.com/docker/compose/releases/download/1.23.0-rc3/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose; sudo chmod +x /usr/local/bin/docker-compose; fi"
+    sshCommand remote: remote, command: "rm -rf /tmp/scripts-my"
+    sshCommand remote: remote, command: "if sudo docker version; then echo 'Docker installed'; else rm -rf /tmp/scripts-my; git clone https://github.com/denjuve/scripts.git /tmp/scripts-my; bash /tmp/scripts-my/docker_install.sh; fi"
+    sshCommand remote: remote, command: "if sudo docker-compose --version; then echo 'Compose installed'; else sudo curl -L https://github.com/docker/compose/releases/download/1.23.0-rc3/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose; sudo chmod +x /usr/local/bin/docker-compose; fi"
+    sshCommand remote: remote, command: "git config --global http.sslVerify false"
+    sh "git config --global http.sslVerify false"
+  }
+
+  stage('Build') {
+
+    sh 'rm -rf repo'
+    sh "git clone -b ${params.ci_branch} https://$u5g:$p5g@5g-transformer.eu/git/5g-transformer.5gt-ci repo"
+
+    sshCommand remote: remote, command: "sudo docker pull cloudifyplatform/community:latest"
+    sshCommand remote: remote, command: "sudo docker rm -f cfy_mano_local || true"
+    sshCommand remote: remote, command: "rm -rf $d_path || true"
+    sshCommand remote: remote, command: "mkdir -p -m 0777 $d_path"
+
+    sh "scp -r -i ${identity} -o StrictHostKeyChecking=no $s_path/* ${userName}@${params.rhost_ip}:$d_path"    
+
+  }
+
+  stage('Deploy') {
+    sshCommand remote: remote, command: "bash -x $d_path/cfy_build_docker.sh"
+
+//    sshCommand remote: remote, command: "sudo docker run --name cfy_mano_local -d --restart unless-stopped -v /sys/fs/cgroup:/sys/fs/cgroup:ro --tmpfs /run --tmpfs /run/lock --security-opt seccomp:unconfined --cap-add SYS_ADMIN -p 80:80 -p 8000:8000 cloudifyplatform/community:latest"
+    }
+
+  stage('Verify') {
+    sshCommand remote: remote, command: "if sudo docker ps|grep cfy_ ; then sudo docker ps |grep cfy_; else sudo docker ps -a|grep cfy_; exit 1; fi"
+        }
+    }
+}
