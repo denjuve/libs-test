@@ -1,0 +1,81 @@
+properties([
+  parameters([
+    string(name: 'rhost_ip_mtp', defaultValue: '10.5.1.117', description: 'target node ip address'),
+    string(name: 'ssh_creds', defaultValue: 'ubuntu_ssh', description: 'ssh credentials id for target node'),
+    string(name: 'git_branch_mtp', defaultValue: 'master', description: 'git branch/tag name'),
+    string(name: 'ci_branch_mtp', defaultValue: 'master', description: 'ci git branch/tag name')
+   ])
+])
+string d_path_mtp = "mtp1"
+string s_path_mtp = "repo/containerization/mtp"
+def remote = [:]
+remote.name = "${params.rhost_ip_mtp}"
+remote.host = "${params.rhost_ip_mtp}"
+remote.allowAnyHosts = true
+node {
+  withCredentials([sshUserPrivateKey(credentialsId: "${params.ssh_creds}", keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),
+      usernamePassword(credentialsId: '5gt-ci', usernameVariable: 'u5g', passwordVariable: 'p5g')]) {
+        remote.user = userName
+        remote.identityFile = identity
+  stage('Bootstrap') {
+    sh 'rm -rf /tmp/scripts-my'
+    sh "if sudo docker version; then echo 'Docker installed'; else rm -rf /tmp/scripts-my; git clone https://github.com/denjuve/scripts.git /tmp/scripts-my; bash /tmp/scripts-my/docker_install.sh; fi"
+    sh "if sudo docker-compose --version; then echo 'Compose installed'; else sudo curl -L https://github.com/docker/compose/releases/download/1.23.0-rc3/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose; sudo chmod +x /usr/local/bin/docker-compose; fi"
+    sshCommand remote: remote, command: "rm -rf /tmp/scripts-my"
+    sshCommand remote: remote, command: "if sudo docker version; then echo 'Docker installed'; else rm -rf /tmp/scripts-my; git clone https://github.com/denjuve/scripts.git /tmp/scripts-my; bash /tmp/scripts-my/docker_install.sh; fi"
+    sshCommand remote: remote, command: "if sudo docker-compose --version; then echo 'Compose installed'; else sudo curl -L https://github.com/docker/compose/releases/download/1.23.0-rc3/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose; sudo chmod +x /usr/local/bin/docker-compose; fi"
+    sshCommand remote: remote, command: "git config --global http.sslVerify false"
+    sh "git config --global http.sslVerify false"
+  }
+  stage('Build') {
+//        git(
+//       url: 'https://5g-transformer.eu/git/5g-transformer.5gt-ci',
+//       credentialsId: '5gt-ci',
+//    )
+sh 'rm -rf repo'
+sh "git clone -b ${params.ci_branch_mtp} https://$u5g:$p5g@5g-transformer.eu/git/5g-transformer.5gt-ci repo"
+
+    sshCommand remote: remote, command: "rm -rf $d_path_mtp/* || true"
+    sshCommand remote: remote, command: "sudo docker ps -a| grep mtp | awk '{ print \$1}' | xargs sudo docker rm -f || true"
+
+    sshCommand remote: remote, command: "mkdir -p -m 0777 $d_path_mtp"
+    sh "scp -r -i ${identity} -o StrictHostKeyChecking=no $s_path_mtp/* ${userName}@${params.rhost_ip_mtp}:$d_path_mtp"
+
+    sshCommand remote: remote, command: "sed -i 's/5g-transformer.eu/$u5g:$p5g@5g-transformer.eu/g' $d_path_mtp/mtp_build_docker.sh"
+    sshCommand remote: remote, command: "sed -i 's/GIT_BRANCH=.*/GIT_BRANCH=${params.git_branch_mtp}/' $d_path_mtp/mtp_build_docker.sh"
+    sshCommand remote: remote, command: "chmod +x $d_path_mtp/mtp_build_docker.sh"
+  }
+  stage('Deploy') {
+    sshCommand remote: remote, command: "bash $d_path_mtp/mtp_build_docker.sh"
+        }
+    stage('Verify') {
+
+    sshCommand remote: remote, command: "sudo locale-gen de_DE.utf8 en_US.utf8 es_ES.utf8 it_IT.utf8 ru_RU.utf8 uk_UA.utf8"
+    sshCommand remote: remote, command: "sudo locale -a"
+    sshCommand remote: remote, command: "sudo apt install -y python-pip virtualenv"
+    sshCommand remote: remote, command: "mkdir -p ~/virtualenvironment/test_mtp || true"
+    sshCommand remote: remote, command: "virtualenv ~/virtualenvironment/test_mtp"
+    sshCommand remote: remote, command: "cp -r $d_path_mtp/test/test_port.py ~/virtualenvironment/test_mtp/bin/"
+
+    sh '''
+cat > /tmp/test_mtp.sh << EOF
+#!/bin/bash
+cd ~/virtualenvironment/test_mtp/bin
+source activate
+pip install pytest
+pytest --junitxml=report_port_mtp.xml -x -v test_port.py
+deactivate
+EOF
+'''
+    sshPut remote: remote, from: "/tmp/test_mtp.sh", into: "/tmp/test_mtp.sh", override: true
+    sshCommand remote: remote, command: "sudo chmod +x /tmp/test_mtp.sh"
+    sshCommand remote: remote, command: "bash /tmp/test_mtp.sh"
+    sshGet remote: remote, from: "virtualenvironment/test_mtp/bin/report_port_mtp.xml", into: "$s_path_mtp/report_port_mtp.xml", override: true
+    junit testResults: "$s_path_mtp/report_port_mtp.xml"
+    sshCommand remote: remote, command: "rm -rf /tmp/*mtp*"
+    sh 'rm -rf /tmp/*mtp*'
+//    sshCommand remote: remote, command: "rm -rf ~/virtualenvironment/test_mtp"
+//    sshCommand remote: remote, command: "rm -rf $d_path_mtp/venv_make_mtp.sh"
+        }
+    }
+}
