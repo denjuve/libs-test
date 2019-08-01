@@ -11,3 +11,4 @@ def dockerScript() {
 //    sshCommand remote: remote, command: "git config --global http.sslVerify false"
 //    sh "git config --global http.sslVerify false"
 //}
+return this
