@@ -1,4 +1,4 @@
-package com
+package com.libs
 
 def = dockerScript() {
     sh 'rm -rf /tmp/scripts-my'
