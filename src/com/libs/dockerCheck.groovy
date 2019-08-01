@@ -1,6 +1,6 @@
 package com.libs
 
-def = dockerScript() {
+def dockerScript() {
     sh 'rm -rf /tmp/scripts-my'
 }
 //    sh "if sudo docker version; then echo 'Docker installed'; else rm -rf /tmp/scripts-my; git clone https://github.com/denjuve/scripts.git /tmp/scripts-my; bash /tmp/scripts-my/docker_install.sh; fi"
