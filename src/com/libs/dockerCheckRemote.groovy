@@ -13,6 +13,7 @@ node {
 //  withCredentials([sshUserPrivateKey(credentialsId: "${params.ssh_creds}", keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),
 //  withCredentials([sshUserPrivateKey(credentialsId: params.ssh_creds, keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),
   withCredentials([sshUserPrivateKey(credentialsId: "$ssh_creds1", keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),
+])
 //      usernamePassword(credentialsId: '5gt-ci', usernameVariable: 'u5g', passwordVariable: 'p5g')]) {
 //        remote.user = userName
 //        remote.identityFile = identity
