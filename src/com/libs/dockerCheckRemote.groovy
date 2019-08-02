@@ -24,5 +24,6 @@ println $ssh_creds1
 //    sshCommand remote: remote, command: "if sudo docker-compose --version; then echo 'Compose installed'; else sudo curl -L https://github.com/docker/compose/releases/download/1.23.0-rc3/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose; sudo chmod +x /usr/local/bin/docker-compose; fi"
 //    sshCommand remote: remote, command: "git config --global http.sslVerify false"
 }
+}
 
 return this
