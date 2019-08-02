@@ -4,8 +4,8 @@ def dockerScriptRemote(componentType) {
 
 string ssh_creds1 = params.ssh_creds
 def remote = [:]
-remote.name = params.rhost_ip_$componentType
-remote.host = params.rhost_ip_$componentType
+remote.name = params.rhost_ip_${componentType}
+remote.host = params.rhost_ip_${componentType}
 remote.allowAnyHosts = true
 
   withCredentials([sshUserPrivateKey(credentialsId: params.ssh_creds, keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),
