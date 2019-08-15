@@ -1,15 +1,15 @@
 package com.libs
 
-def dockerScriptRemote() {
-//def dockerScriptRemote(String componentType) {
+//def dockerScriptRemote() {
+def dockerScriptRemote(String componentType) {
 
-string ssh_creds1 = params.ssh_creds
+//string ssh_creds1 = params.ssh_creds
 def remote = [:]
-remote.name = params.rhost_ip_mon
-remote.host = params.rhost_ip_mon
-//remote.name = println(componentType)
+//remote.name = params.rhost_ip_mon
+//remote.host = params.rhost_ip_mon
+remote.name = println(componentType)
 //${componentType}
-//remote.host = println(componentType)
+remote.host = println(componentType)
 //params.rhost_ip_${componentType}
 remote.allowAnyHosts = true
 
