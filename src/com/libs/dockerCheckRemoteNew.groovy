@@ -7,9 +7,11 @@ def dockerScriptRemote(String componentType) {
 def remote = [:]
 //remote.name = params.rhost_ip_mon
 //remote.host = params.rhost_ip_mon
-remote.name = println(componentType)
+remote.name = ${componentType}
+//println(componentType)
 //${componentType}
-remote.host = println(componentType)
+remote.host = ${componentType}
+//println(componentType)
 //params.rhost_ip_${componentType}
 remote.allowAnyHosts = true
 
