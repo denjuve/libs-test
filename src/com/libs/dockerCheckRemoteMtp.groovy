@@ -1,21 +1,11 @@
 package com.libs
 
-//def dockerScriptRemote() {
-//def dockerScriptRemote(String componentType) {
-def dockerScriptRemote(componentType) {
-println(componentType)
-println ${componentType}
+def dockerScriptRemote() {
 
-//string ssh_creds1 = params.ssh_creds
+string ssh_creds1 = params.ssh_creds
 def remote = [:]
-//remote.name = params.rhost_ip_mon
-//remote.host = params.rhost_ip_mon
-remote.name = ${componentType}
-//println(componentType)
-//${componentType}
-remote.host = ${componentType}
-//println(componentType)
-//params.rhost_ip_${componentType}
+remote.name = params.rhost_ip_mtp
+remote.host = params.rhost_ip_mtp
 remote.allowAnyHosts = true
 
   withCredentials([sshUserPrivateKey(credentialsId: params.ssh_creds, keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),
