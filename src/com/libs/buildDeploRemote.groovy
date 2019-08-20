@@ -1,6 +1,6 @@
 package com.libs
 
-def remoteDeploy(dest_dir, source_dir, component_name, ci_branch_repo, ssh_creds, remote_ip)
+def remoteDeploy(dest_dir, source_dir, component_name, ci_branch_repo, ssh_creds, remote_ip) {
 
 def remote = [:]
 remote.name = remote_ip
@@ -44,3 +44,5 @@ string cmpt_id = component_name
     sshCommand remote: remote, command: "bash dest_dir/$cmpt_idbuild_docker.sh"
 
     sshCommand remote: remote, command: "sudo docker ps -a|grep $cmpt_id"
+}}
+
