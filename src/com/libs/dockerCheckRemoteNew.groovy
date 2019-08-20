@@ -1,6 +1,6 @@
 package com.libs
 
-def dockerScriptRemote(component_type, remote_ip, credentials_id) {
+def dockerScriptRemote(remote_ip, credentials_id) {
 
 def remote = [:]
 remote.host = ${remote_ip}
