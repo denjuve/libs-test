@@ -2,9 +2,6 @@ package com.libs
 
 def dockerScriptRemote() {
 
-println(params.rhost_ip)
-
-string ssh_creds1 = params.ssh_creds
 def remote = [:]
 remote.name = params.rhost_ip
 remote.host = params.rhost_ip
