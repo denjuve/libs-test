@@ -1,6 +1,6 @@
 package com.libs
 
-def remoteDeploy(dest_dir, source_dir, component_name, ci_branch_repo, ssh_creds, ci_creds, remote_ip)
+def remoteDeploy(dest_dir, source_dir, component_name, ci_branch_repo, ssh_creds, remote_ip)
 
 def remote = [:]
 remote.name = remote_ip
@@ -8,7 +8,7 @@ remote.host = remote_ip
 remote.allowAnyHosts = true
 
   withCredentials([sshUserPrivateKey(credentialsId: ssh_creds, keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),
-      usernamePassword(credentialsId: ci_creds, usernameVariable: 'u5g', passwordVariable: 'p5g')]) {
+      usernamePassword(credentialsId: '5gt-ci', usernameVariable: 'u5g', passwordVariable: 'p5g')]) {
         remote.user = userName
         remote.identityFile = identity
 
