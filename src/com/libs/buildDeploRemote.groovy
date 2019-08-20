@@ -12,7 +12,7 @@ remote.allowAnyHosts = true
         remote.user = userName
         remote.identityFile = identity
 
-string 5gt_id = component_name
+string cmpt_id = component_name
 
 ////arguments for the function
 //****************************
@@ -36,11 +36,11 @@ string 5gt_id = component_name
     sh "git clone -b ci_branch_repo https://$u5g:$p5g@5g-transformer.eu/git/5g-transformer.5gt-ci repo"
     sh "scp -r -i ${identity} -o StrictHostKeyChecking=no $s_path/* ${userName}@${remote_ip}:dest_dir"
 
-    sshCommand remote: remote, command: "sed -i 's/5g-transformer.eu/$u5g:$p5g@5g-transformer.eu/g' dest_dir/$5gt_idbuild_docker.sh"
-    sshCommand remote: remote, command: "sed -i 's/GIT_BRANCH=.*/GIT_BRANCH=params.git_branch_mon/' dest_dir/$5gt_idbuild_docker.sh"
-    sshCommand remote: remote, command: "chmod +x dest_dir/$5gt_idbuild_docker.sh"
-    sshCommand remote: remote, command: "sed -i 's/#sudo/sudo/g' dest_dir/$5gt_idbuild_docker.sh"
+    sshCommand remote: remote, command: "sed -i 's/5g-transformer.eu/$u5g:$p5g@5g-transformer.eu/g' dest_dir/$cmpt_idbuild_docker.sh"
+    sshCommand remote: remote, command: "sed -i 's/GIT_BRANCH=.*/GIT_BRANCH=params.git_branch_mon/' dest_dir/$cmpt_idbuild_docker.sh"
+    sshCommand remote: remote, command: "chmod +x dest_dir/$cmpt_idbuild_docker.sh"
+    sshCommand remote: remote, command: "sed -i 's/#sudo/sudo/g' dest_dir/$cmpt_idbuild_docker.sh"
 
-    sshCommand remote: remote, command: "bash dest_dir/$5gt_idbuild_docker.sh"
+    sshCommand remote: remote, command: "bash dest_dir/$cmpt_idbuild_docker.sh"
 
-    sshCommand remote: remote, command: "sudo docker ps -a|grep $5gt_id"
+    sshCommand remote: remote, command: "sudo docker ps -a|grep $cmpt_id"
