@@ -12,7 +12,7 @@ remote.allowAnyHosts = true
         remote.user = userName
         remote.identityFile = identity
 
-string cmpt_id = component_name
+//string cmpt_id = component_name
 
 ////arguments for the function
 //****************************
