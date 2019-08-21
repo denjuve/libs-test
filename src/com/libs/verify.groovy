@@ -25,16 +25,23 @@ remote.allowAnyHosts = true
     sshCommand remote: remote, command: "virtualenv ~/virtualenvironment/${cmpt_id}_test"
     sshCommand remote: remote, command: "cp -r $d_dir/test/test_port.py ~/virtualenvironment/${cmpt_id}_test/bin/"
 
-    sh '''
-cat > /tmp/${cmpt_id}_test.sh << EOF
-#!/bin/bash
-cd ~/virtualenvironment/${cmpt_id}test/bin/          
-source activate
-pip install pytest
-pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true
-deactivate
-EOF
-    '''
+    sshCommand remote: remote, command: "echo '#!/bin/bash' > /tmp/${cmpt_id}_test.sh"
+    sshCommand remote: remote, command: "echo cd ~/virtualenvironment/${cmpt_id}test/bin/ >> /tmp/${cmpt_id}_test.sh"
+    sshCommand remote: remote, command: "echo 'source activate' >> /tmp/${cmpt_id}_test.sh"
+    sshCommand remote: remote, command: "echo 'pip install pytest' /tmp/${cmpt_id}_test.sh"
+    sshCommand remote: remote, command: "echo pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true >> /tmp/${cmpt_id}_test.sh"
+    sshCommand remote: remote, command: "echo deactivate >> /tmp/${cmpt_id}_test.sh"
+
+//    sh '''
+//cat > /tmp/${cmpt_id}_test.sh << EOF
+//#!/bin/bash
+//cd ~/virtualenvironment/${cmpt_id}test/bin/          
+//source activate
+//pip install pytest
+//pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true
+//deactivate
+//EOF
+//    '''
     sshPut remote: remote, from: "/tmp/${cmpt_id}_test.sh", into: "/tmp/${cmpt_id}_test.sh", override: true
     sshCommand remote: remote, command: "chmod +x /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "bash /tmp/${cmpt_id}_test.sh"
