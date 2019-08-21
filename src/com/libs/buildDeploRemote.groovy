@@ -18,12 +18,6 @@ remote.allowAnyHosts = true
         remote.identityFile = identity
 
 ////arguments for the function//****************************
-//$s_dir [--> $s_path_mon/s_path_mtp etc.]
-//$d_dir [--> $d_path_mon/d_path_mtp etc.]
-//grep mon_ (component containers deletion) ????????  component_name [--> mon_]
-//ci_branch_repo [-->${params.ci_branch_mon}]
-//ssh_id [-->${params.ssh_creds}]
-
 //remote_ip (scp)
 //ci_creds [$u5g:$p5g] (creds git_ci) ????????????????????????? !!!!!!withcredentials!!!
 //${identity} (scp) !!!!!!withcredentials!!!
@@ -37,7 +31,7 @@ remote.allowAnyHosts = true
     sh "git clone -b $ci_rep https://$u5g:$p5g@5g-transformer.eu/git/5g-transformer.5gt-ci repo"
     sh "scp -r -i ${identity} -o StrictHostKeyChecking=no $s_dir/* ${userName}@${remote_ip}:$d_dir"
 
-    sshCommand remote: remote, command: "sed -i 's/5g-transformer.eu/$u5g:$p5g@5g-transformer.eu/g' $d_dir/$cmpt_idbuild_docker.sh"
+    sshCommand remote: remote, command: "sed -i 's/5g-transformer.eu/$u5g:$p5g@5g-transformer.eu/g' $d_dir/${cmpt_id}build_docker.sh"
     sshCommand remote: remote, command: "sed -i 's/GIT_BRANCH=.*/GIT_BRANCH=params.git_branch_mon/' $d_dir/$cmpt_idbuild_docker.sh"
     sshCommand remote: remote, command: "chmod +x $d_dir/$cmpt_idbuild_docker.sh"
     sshCommand remote: remote, command: "sed -i 's/#sudo/sudo/g' $d_dir/$cmpt_idbuild_docker.sh"
