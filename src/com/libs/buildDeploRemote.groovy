@@ -3,6 +3,7 @@ package com.libs
 def remoteDeploy(dest_dir, source_dir, component_name, ci_branch_repo, ssh_creds, remote_ip) {
 
 string cmpt_id = component_name
+string ci_rep = ci_branch_repo
 
 def remote = [:]
 remote.name = remote_ip
@@ -31,7 +32,7 @@ remote.allowAnyHosts = true
     sshCommand remote: remote, command: "sudo docker rm -f \$(sudo docker ps | grep $cmpt_id | awk '{ print \$1}')  || true"
     sshCommand remote: remote, command: "mkdir -p -m 0777 dest_dir"
 
-    sh "git clone -b ci_branch_repo https://$u5g:$p5g@5g-transformer.eu/git/5g-transformer.5gt-ci repo"
+    sh "git clone -b $ci_rep https://$u5g:$p5g@5g-transformer.eu/git/5g-transformer.5gt-ci repo"
     sh "scp -r -i ${identity} -o StrictHostKeyChecking=no $s_path/* ${userName}@${remote_ip}:dest_dir"
 
     sshCommand remote: remote, command: "sed -i 's/5g-transformer.eu/$u5g:$p5g@5g-transformer.eu/g' dest_dir/$cmpt_idbuild_docker.sh"
