@@ -29,7 +29,7 @@ remote.allowAnyHosts = true
     sshCommand remote: remote, command: "echo cd ~/virtualenvironment/${cmpt_id}_test/bin/ >> /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "echo 'source activate' >> /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "echo 'pip install pytest' >> /tmp/${cmpt_id}_test.sh"
-    sshCommand remote: remote, command: "echo "pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true" >> /tmp/${cmpt_id}_test.sh"
+    sshCommand remote: remote, command: "echo 'pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true' >> /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "echo deactivate >> /tmp/${cmpt_id}_test.sh"
 
 //    sh '''
