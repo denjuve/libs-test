@@ -32,11 +32,11 @@ remote.allowAnyHosts = true
     sh "scp -r -i ${identity} -o StrictHostKeyChecking=no $s_dir/* ${userName}@${remote_ip}:$d_dir"
 
     sshCommand remote: remote, command: "sed -i 's/5g-transformer.eu/$u5g:$p5g@5g-transformer.eu/g' $d_dir/${cmpt_id}build_docker.sh"
-    sshCommand remote: remote, command: "sed -i 's/GIT_BRANCH=.*/GIT_BRANCH=params.git_branch_mon/' $d_dir/$cmpt_idbuild_docker.sh"
-    sshCommand remote: remote, command: "chmod +x $d_dir/$cmpt_idbuild_docker.sh"
-    sshCommand remote: remote, command: "sed -i 's/#sudo/sudo/g' $d_dir/$cmpt_idbuild_docker.sh"
+    sshCommand remote: remote, command: "sed -i 's/GIT_BRANCH=.*/GIT_BRANCH=params.git_branch_mon/' $d_dir/${cmpt_id}build_docker.sh"
+    sshCommand remote: remote, command: "chmod +x $d_dir/${cmpt_id}build_docker.sh"
+    sshCommand remote: remote, command: "sed -i 's/#sudo/sudo/g' $d_dir/${cmpt_id}build_docker.sh"
 
-    sshCommand remote: remote, command: "bash $d_dir/$cmpt_idbuild_docker.sh"
+    sshCommand remote: remote, command: "bash $d_dir/${cmpt_id}build_docker.sh"
 
     sshCommand remote: remote, command: "sudo docker ps -a|grep $cmpt_id"
 }}
