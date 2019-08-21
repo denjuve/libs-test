@@ -1,12 +1,10 @@
 package com.libs
 
-//def remoteDeploy($d_dir, $s_dir, component_name, ci_branch_repo, ssh_creds, remote_ip) {
-def remoteDeploy(d_dirp, s_dirp, component_name, ssh_creds, remote_ip) {
+def remoteVerify(d_dirp, s_dirp, component_name, ssh_creds, remote_ip) {
 
 string d_dir = d_dirp
 string s_dir = s_dirp
 string cmpt_id = component_name
-//string ci_rep = ci_branch_repo
 
 def remote = [:]
 remote.name = remote_ip
@@ -20,7 +18,7 @@ remote.allowAnyHosts = true
 
     sshCommand remote: remote, command: "sudo locale-gen de_DE.utf8 en_US.utf8 es_ES.utf8 it_IT.utf8 ru_RU.utf8 uk_UA.utf8"
     sshCommand remote: remote, command: "sudo locale -a"
-    sshCommand remote: remote, command: 'sudo apt update -y'
+    sshCommand remote: remote, command: "sudo apt update -y"
     sshCommand remote: remote, command: "sudo apt install -y python-pip virtualenv"
     
     sshCommand remote: remote, command: "mkdir -p -m 0777 ~/virtualenvironment/${cmpt_id}_test || true"
@@ -46,3 +44,4 @@ EOF
     sshCommand remote: remote, command: "rm -rf /tmp/*${cmpt_id}*"
     sh "rm -rf /tmp/*${cmpt_id}*"
 }}
+return this
