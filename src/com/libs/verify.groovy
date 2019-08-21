@@ -23,7 +23,7 @@ remote.allowAnyHosts = true
     
     sshCommand remote: remote, command: "mkdir -p -m 0777 ~/virtualenvironment/${cmpt_id}_test || true"
     sshCommand remote: remote, command: "virtualenv ~/virtualenvironment/${cmpt_id}_test"
-    sshCommand remote: remote, command: "cp -r $d_dir/test/test_port.py ~/virtualenvironment/vs_test/bin/"
+    sshCommand remote: remote, command: "cp -r $d_dir/test/test_port.py ~/virtualenvironment/${cmpt_id}_test/bin/"
 
     sh '''
 cat > /tmp/${cmpt_id}_test.sh << EOF
