@@ -33,7 +33,7 @@ remote.allowAnyHosts = true
 //    sshCommand remote: remote, command: "echo 'pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true' >> /tmp/${cmpt_id}_test.sh"
 //sed '2 s/.*/new_text_here/' filename
     sshCommand remote: remote, command: "echo problem >> /tmp/${cmpt_id}_test.sh"
-    sshCommand remote: remote, command: "sed -i '5 s/.*/pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true@/tmp/${cmpt_id}_test.sh"
+    sshCommand remote: remote, command: "sed -i '5 s/.*/pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true'@/tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "echo deactivate >> /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "echo $echo_line >> /tmp/${cmpt_id}_test.sh"
 
