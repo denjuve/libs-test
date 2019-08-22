@@ -40,7 +40,7 @@ remote.allowAnyHosts = true
 //    sshPut remote: remote, from: "/tmp/${cmpt_id}_test.sh", into: "/tmp/${cmpt_id}_test.sh", override: true
     sshCommand remote: remote, command: "chmod +x /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "bash /tmp/${cmpt_id}_test.sh"
-    sshGet remote: remote, from: "~/virtualenvironment/${cmpt_id}_test/bin/${cmpt_id}_report_port.xml", into: "$s_dir/${cmpt_id}_report_port.xml", override: true
+    sshGet remote: remote, from: "virtualenvironment/${cmpt_id}_test/bin/${cmpt_id}_report_port.xml", into: "$s_dir/${cmpt_id}_report_port.xml", override: true
     junit testResults: "$s_dir/${cmpt_id}_report_port.xml"
     
     sshCommand remote: remote, command: "rm -rf /tmp/*${cmpt_id}*"
