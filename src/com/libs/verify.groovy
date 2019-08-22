@@ -30,28 +30,17 @@ remote.allowAnyHosts = true
     sshCommand remote: remote, command: "echo cd ~/virtualenvironment/${cmpt_id}_test/bin/ >> /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "echo 'source activate' >> /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "echo 'pip install pytest' >> /tmp/${cmpt_id}_test.sh"
-//    sshCommand remote: remote, command: "echo 'pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true' >> /tmp/${cmpt_id}_test.sh"
-//sed '2 s/.*/new_text_here/' filename
+
     sshCommand remote: remote, command: "echo problem >> /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "sed -i 's@problem@pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true'@ /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "echo deactivate >> /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "echo $echo_line >> /tmp/${cmpt_id}_test.sh"
 
-//    sh '''
-//cat > /tmp/${cmpt_id}_test.sh << EOF
-//#!/bin/bash
-//cd ~/virtualenvironment/${cmpt_id}test/bin/          
-//source activate
-//pip install pytest
-//pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true
-//deactivate
-//EOF
-//    '''
 
 //    sshPut remote: remote, from: "/tmp/${cmpt_id}_test.sh", into: "/tmp/${cmpt_id}_test.sh", override: true
     sshCommand remote: remote, command: "chmod +x /tmp/${cmpt_id}_test.sh"
     sshCommand remote: remote, command: "bash /tmp/${cmpt_id}_test.sh"
-    sshGet remote: remote, from: "$d_dir/test/${cmpt_id}_report_port.xml", into: "$s_dir/${cmpt_id}_report_port.xml", override: true
+    sshGet remote: remote, from: "~/virtualenvironment/${cmpt_id}_test/bin/${cmpt_id}_report_port.xml", into: "$s_dir/${cmpt_id}_report_port.xml", override: true
     junit testResults: "$s_dir/${cmpt_id}_report_port.xml"
     
     sshCommand remote: remote, command: "rm -rf /tmp/*${cmpt_id}*"
