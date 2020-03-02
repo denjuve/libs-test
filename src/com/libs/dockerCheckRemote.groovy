@@ -7,7 +7,7 @@ string r_ip = remote_ip
 def remote = [:]
 //remote.name = remote_ip
 //remote.host = remote_ip
-remote.name = $r_ip
+remote.name = "$r_ip"
 remote.host = $r_ip
 remote.allowAnyHosts = true
 
