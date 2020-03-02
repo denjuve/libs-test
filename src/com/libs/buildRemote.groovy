@@ -10,8 +10,8 @@ string ci_rep = ci_branch_repo
 string git_rep = git_branch_repo
 
 def remote = [:]
-remote.name = $r_ip
-remote.host = $r_ip
+remote.name = r_ip
+remote.host = r_ip
 remote.allowAnyHosts = true
 
   withCredentials([sshUserPrivateKey(credentialsId: ssh_creds, keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),

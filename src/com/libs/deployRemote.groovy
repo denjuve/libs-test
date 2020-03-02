@@ -7,8 +7,8 @@ string d_dir = d_dirp
 string cmpt_id = component_name
 
 def remote = [:]
-remote.name = $r_ip
-remote.host = $r_ip
+remote.name = r_ip
+remote.host = r_ip
 remote.allowAnyHosts = true
 
   withCredentials([sshUserPrivateKey(credentialsId: ssh_creds, keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),
