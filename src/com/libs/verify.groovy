@@ -44,6 +44,6 @@ remote.allowAnyHosts = true
     junit testResults: "$s_dir/${cmpt_id}_report_port.xml"
     
     sshCommand remote: remote, command: "rm -rf /tmp/*${cmpt_id}*"
-    sh "rm -rf /tmp/*${cmpt_id}*"
+//    sh "rm -rf /tmp/*${cmpt_id}*"
 }}
 return this
