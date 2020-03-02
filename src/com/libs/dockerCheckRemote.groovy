@@ -2,9 +2,13 @@ package com.libs
 
 def dockerScriptRemote(remote_ip, credentials_id) {
 
+string r_ip = remote_ip
+
 def remote = [:]
-remote.name = remote_ip
-remote.host = remote_ip
+//remote.name = remote_ip
+//remote.host = remote_ip
+remote.name = $r_ip
+remote.host = $r_ip
 remote.allowAnyHosts = true
 
   withCredentials([sshUserPrivateKey(credentialsId: credentials_id, keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),

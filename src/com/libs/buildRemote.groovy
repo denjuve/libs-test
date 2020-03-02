@@ -2,6 +2,7 @@ package com.libs
 
 def remoteBuild(d_dirp, s_dirp, component_name, ci_branch_repo, git_branch_repo, ssh_creds, remote_ip) {
 
+string r_ip = remote_ip
 string d_dir = d_dirp
 string s_dir = s_dirp
 string cmpt_id = component_name
@@ -9,8 +10,8 @@ string ci_rep = ci_branch_repo
 string git_rep = git_branch_repo
 
 def remote = [:]
-remote.name = remote_ip
-remote.host = remote_ip
+remote.name = $r_ip
+remote.host = $r_ip
 remote.allowAnyHosts = true
 
   withCredentials([sshUserPrivateKey(credentialsId: ssh_creds, keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),

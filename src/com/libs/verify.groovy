@@ -2,14 +2,15 @@ package com.libs
 
 def remoteVerify(d_dirp, s_dirp, component_name, ssh_creds, remote_ip) {
 
+string r_ip = remote_ip
 string d_dir = d_dirp
 string s_dir = s_dirp
 string cmpt_id = component_name
 string echo_line = "pytest --junitxml=${cmpt_id}_report_port.xml -x -v test_port.py || true"
 
 def remote = [:]
-remote.name = remote_ip
-remote.host = remote_ip
+remote.name = $r_ip
+remote.host = $r_ip
 remote.allowAnyHosts = true
 
   withCredentials([sshUserPrivateKey(credentialsId: ssh_creds, keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),
