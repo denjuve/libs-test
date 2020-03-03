@@ -25,7 +25,7 @@ remote.allowAnyHosts = true
     sshCommand remote: remote, command: "mkdir -p -m 0777 $d_dir"
 
     sh "git clone -b $ci_rep https://$u5g:$p5g@5g-transformer.eu/git/5g-transformer.5gt-ci repo"
-    sh "scp -r -i ${identity} -o StrictHostKeyChecking=no $s_dir/* ${userName}@${remote_ip}:$d_dir"
+    sh "scp -r -i ${identity} -o StrictHostKeyChecking=no $s_dir/* ${userName}@${remote_ip}:${d_dir}"
 
     sshCommand remote: remote, command: "sed -i 's/5g-transformer.eu/$u5g:$p5g@5g-transformer.eu/g' $d_dir/${cmpt_id}build_docker.sh"
     sshCommand remote: remote, command: "sed -i 's/GIT_BRANCH=.*/GIT_BRANCH=$git_rep/' $d_dir/${cmpt_id}build_docker.sh"
