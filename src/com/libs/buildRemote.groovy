@@ -33,6 +33,8 @@ for(String item : FILES_LIST.split("\\r?\\n")){
 sshPut remote: remote, from: "$s_dir/$item", into: "$d_dir", override: true
 }
 
+    sshCommand remote: remote, command: "chmod -R +x /home/ubuntu/$s_dir"
+
     sshCommand remote: remote, command: "sed -i 's/5g-transformer.eu/$u5g:$p5g@5g-transformer.eu/g' $d_dir/${cmpt_id}build_docker.sh"
     sshCommand remote: remote, command: "sed -i 's/GIT_BRANCH=.*/GIT_BRANCH=$git_rep/' $d_dir/${cmpt_id}build_docker.sh"
     sshCommand remote: remote, command: "chmod +x $d_dir/${cmpt_id}build_docker.sh"
