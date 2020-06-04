@@ -14,7 +14,8 @@ remote.host = r_ip
 remote.allowAnyHosts = true
 
   withCredentials([sshUserPrivateKey(credentialsId: ssh_creds, keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName'),
-      usernamePassword(credentialsId: '5gt-ci', usernameVariable: 'u5g', passwordVariable: 'p5g')]) {
+//      usernamePassword(credentialsId: '5gt-ci', usernameVariable: 'u5g', passwordVariable: 'p5g')
+]) {
         remote.user = userName
         remote.identityFile = identity
 
@@ -44,7 +45,7 @@ remote.allowAnyHosts = true
     sshGet remote: remote, from: "virtualenvironment/${cmpt_id}_test/bin/${cmpt_id}_report_port.xml", into: "$s_dir/${cmpt_id}_report_port.xml", override: true
     junit testResults: "$s_dir/${cmpt_id}_report_port.xml"
     
-    sshCommand remote: remote, command: "rm -rf /tmp/*${cmpt_id}*"
+    sshCommand remote: remote, command: "rm -rf /tmp/*${cmpt_id}* || true"
 //    sh "rm -rf /tmp/*${cmpt_id}*"
 }}
 return this

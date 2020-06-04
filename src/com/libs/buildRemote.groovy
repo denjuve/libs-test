@@ -24,18 +24,23 @@ remote.allowAnyHosts = true
     sshCommand remote: remote, command: "sudo docker rm -f \$(sudo docker ps -a | grep $cmpt_id | awk '{ print \$1}')  || true"
     sshCommand remote: remote, command: "mkdir -p -m 0777 $d_dir"
 
-    sh "git clone -b $ci_rep https://$u5g:$p5g@5g-transformer.eu/git/5g-transformer.5gt-ci repo"
-//    sh "scp -r -i ${identity} -o StrictHostKeyChecking=no $s_dir/* ${userName}@${remote_ip}:${d_dir}"
+    sh "git clone -b $ci_rep https://$u5g:$p5g@5growth.eu/git/5growth.5gr-ci repo"
+//    git(
+//       branch: "${params.ci_branch_mon}",
+//       url: 'https://5growth.eu/git/5growth.5gr-ci',
+//       credentialsId: '5gt-ci',
+//    )
+//    sh "mkdir -p repo"
+//    sh "mv containerization repo/"
 
     def  FILES_LIST = sh (script: "ls   $s_dir", returnStdout: true).trim()
-    //PARSING
     for(String item : FILES_LIST.split("\\r?\\n")){ 
     sshPut remote: remote, from: "$s_dir/$item", into: "$d_dir", override: true
     }
 
     sshCommand remote: remote, command: "chmod -R +x /home/ubuntu/$d_dir || true"
 
-    sshCommand remote: remote, command: "sed -i 's/5g-transformer.eu/$u5g:$p5g@5g-transformer.eu/g' $d_dir/${cmpt_id}build_docker.sh"
+    sshCommand remote: remote, command: "sed -i 's/5growth.eu/$u5g:$p5g@5growth.eu/g' $d_dir/${cmpt_id}build_docker.sh"
     sshCommand remote: remote, command: "sed -i 's/GIT_BRANCH=.*/GIT_BRANCH=$git_rep/' $d_dir/${cmpt_id}build_docker.sh"
     sshCommand remote: remote, command: "chmod +x $d_dir/${cmpt_id}build_docker.sh"
 }}
